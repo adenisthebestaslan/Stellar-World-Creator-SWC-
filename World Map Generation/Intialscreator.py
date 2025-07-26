@@ -4,6 +4,7 @@ import random
 
 Blue= (50, 147, 168)
 Black = (0, 0, 0)
+Red= (201, 26, 26)
 
 
 def Generate(colour=Blue):
@@ -12,7 +13,7 @@ def Generate(colour=Blue):
   img = Image.new('RGB', (width, height), color=Blue)
   img.save("original.png")
 
-Generate()
+# Generate()
 #pi = 3.14, so 2pi/circumfrence= 6.28.
 #i had to learn about radius for this!
 #basically, the radius is the distance from the center to the edge of the blob.
@@ -48,3 +49,81 @@ def generateBlob(radius=100, center=(100, 100),points=random.randint(5, 15)):
   print(pointslist)
 
 generateBlob(radius=50, center=(100, 100),)
+def squarepoints(rangenumber=1):
+  global offsets
+  global newoffsets
+  offsets = []
+  newoffsets = []
+
+  for i in range(4):
+    x = (random.randint(0 - rangenumber, rangenumber))
+    y = (random.randint(0 - rangenumber, rangenumber))
+    coord = (x,y)
+    print(coord)
+    offsets.append(coord)
+    print(offsets)
+
+def MountainGeneration(IMAGE):
+      img = Image.open(IMAGE)
+
+      width, height = img.size
+      cy = width // 2
+      cx = height // 2
+      centercords = (cx, cy)
+      print(f"Center cords: {centercords}")
+      Directions = ["north", "south", "east", "west"]
+      Plateusisthere = random.randint(0, 1)
+      coords = {
+        "north": [(cx,cy)],
+        "south": [(cx,cy)],
+        "east": [(cx,cy)],
+        "west": [(cx,cy)]
+      }
+
+
+      for direction in Directions:
+        for _ in range(3):
+            if direction == "north":
+               coords["north"].append((random.randint(0, 200), random.randint(100, 200)))
+            elif direction == "south":
+              coords["south"].append((random.randint(0, 200), random.randint(0, 100)))
+            elif direction == "east":
+              coords["east"].append((random.randint(0, 100), random.randint(0, 100)))
+            elif direction == "west":
+               coords["west"].append((random.randint(0, 10), random.randint(100, 200)))
+      makeline(coords["north"], img, "yes")
+      makeline(coords["south"], img, "yes")
+      makeline(coords["east"], img, "yes")
+      makeline(coords["west"], img, "yes")
+
+      print(f"Northern coords: {coords['north']}")
+      print(f"Southern coords: {coords['south']}")
+      print(f"Eastern coords: {coords['east']}")
+      print(f"Western coords: {coords['west']}")
+      img.save('output_with_line.png')
+      img.show()
+
+      # print(f"Northern cords: {northerncords} southern cords: {southerncords} eastern cords: {easterncords} western cords: {westerncords}")
+
+                 
+            
+      
+      
+         
+def makeline(values, img, colourroll="yes"):
+    draw = ImageDraw.Draw(img)
+    if colourroll == "yes":
+        Plateusisthere = random.randint(0, 1)
+    else:
+        Plateusisthere = 0
+    if Plateusisthere == 1:
+        colour = Red
+    else:
+        colour = Blue
+
+    draw.line(values, fill=colour, width=5)
+
+       
+
+
+
