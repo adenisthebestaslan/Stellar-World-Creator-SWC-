@@ -1,21 +1,4 @@
-Generate Map:
-   Make intial World Blob
-      Create Blue Ocean (check)
-       Make Blob (check)
-   Create Mountain Ranges
-      Make Mountain Barriers(check)
-      Decide if it will be a smaller mountain or a bigger mountain (check)
-        make it avoid any line overlap (check)
-        make it check for water near a tetonic line: if the line is blue it will make large mountains. near the nearest land border of the blue line
-        red lines create plataeus
-        ignore 
-   Create Climate
-          make Wind map.
-          do fancy calculations:
-            calculate rivers based on mountain positon
-            calculate wind flow's effects on climate
-   Create Fauna
-     scan image for climate zones and then retrive fauna and flora list from the databases.
+created by adenisthebestaslan and with some help from skrullo
 
-
-     0.2.2
+Python created by Guido van Rossum.
+pillow libary created by Fredrik Lundh
