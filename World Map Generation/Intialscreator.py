@@ -1,7 +1,7 @@
 from PIL import Image,ImageDraw
 import math
 import random
-
+Directions = ["north", "south", "east", "west"]
 Blue= (50, 147, 168)
 Black = (0, 0, 0)
 Red= (201, 26, 26)
@@ -63,34 +63,47 @@ def squarepoints(rangenumber=1):
     offsets.append(coord)
     print(offsets)
 
-def MountainGeneration(IMAGE):
-      img = Image.open(IMAGE)
 
+coords = {
+    "north": [],
+    "south": [],
+    "east": [],
+    "west": []
+    }
+
+def MountainTetonicGeneration(IMAGE):
+      img = Image.open(IMAGE)
       width, height = img.size
       cy = width // 2
       cx = height // 2
       centercords = (cx, cy)
+      coords['north'].append((cx, cy))
+      coords['south'].append((cx, cy))
+      coords['east'].append((cx, cy))
+      coords['west'].append((cx, cy))
+      
       print(f"Center cords: {centercords}")
-      Directions = ["north", "south", "east", "west"]
+      global Directions
       Plateusisthere = random.randint(0, 1)
-      coords = {
-        "north": [(cx,cy)],
-        "south": [(cx,cy)],
-        "east": [(cx,cy)],
-        "west": [(cx,cy)]
-      }
-
-
       for direction in Directions:
         for _ in range(3):
             if direction == "north":
-               coords["north"].append((random.randint(0, 200), random.randint(100, 200)))
+              current =(random.randint(cx, cx + cx // 2), random.randint(cy, cy * 2))
+              if current not in coords["north"]:
+                coords["north"].append(current)
             elif direction == "south":
-              coords["south"].append((random.randint(0, 200), random.randint(0, 100)))
+              current = (random.randint(cx, cx + cx // 2), random.randint(0, cy // 2))
+              if current not in coords["south"]:
+                coords["south"].append(current)
             elif direction == "east":
-              coords["east"].append((random.randint(0, 100), random.randint(0, 100)))
+              current = random.randint(0,cx), random.randint (0, cy // 2)
+              if current not in coords["east"]:
+                coords["east"].append(current)            
             elif direction == "west":
-               coords["west"].append((random.randint(0, 10), random.randint(100, 200)))
+               current = random.randint(cx, cx * 2), random.randint(cy, cy + cy // 2)
+               if current not in coords["west"]:
+                  coords["west"].append(current)
+               
       makeline(coords["north"], img, "yes")
       makeline(coords["south"], img, "yes")
       makeline(coords["east"], img, "yes")
@@ -102,6 +115,7 @@ def MountainGeneration(IMAGE):
       print(f"Western coords: {coords['west']}")
       img.save('output_with_line.png')
       img.show()
+
 
       # print(f"Northern cords: {northerncords} southern cords: {southerncords} eastern cords: {easterncords} western cords: {westerncords}")
 
@@ -122,8 +136,20 @@ def makeline(values, img, colourroll="yes"):
         colour = Blue
 
     draw.line(values, fill=colour, width=5)
+    if Plateusisthere == 1:
+      values.append(("Plateu", "true"))
+    else:
+      values.append(("mountain", "true"))
 
        
 
+       
 
+def MountainGeneration(IMAGE,coords):
+    print("Generating mountains...")
+    img = Image.open(IMAGE)
+    for i in coords:
+        print(coords[i])
+
+    
 
