@@ -43,6 +43,13 @@ def generateBlob(radius=100, center=(100, 100),points=random.randint(5, 15)):
 first, this defines a function, with radius, center, points between 5 and 5. it sets the center of the image as 100,100, before prinint the points that were defined at the begining of the function.
 After this, we split the circle into parts based on pi * 2 / points. it prints the angles before proceeding to define pointslist.
 
+Here is a quick explination of the arguments, if you need them: 
+| Arugment | default| purpose |
+|----------|:---------:|---------:|
+|radius| 100|sets the radius, or distance from the centre of the circle to the outside of the circle|
+|center| 100,100|sets the centre of the image.|
+|points|5 to 15 | used to divide the circle, will later be multiplied with i to find the areas of the circle where the angles are|
+
     for i in range(points):
     angle = i * angles
     #the angles/parts of the circle is equal to the item x the angle\
