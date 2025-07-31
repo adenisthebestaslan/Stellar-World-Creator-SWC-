@@ -62,3 +62,39 @@ Here is a table to understand how it generates values
 | east | inbetween CX and CX times 2| Inbetween 0 and CY divided by 2  |
 
 
+
+## printign our image:
+```
+      
+      makeline(coords["north"], img, "yes")
+      makeline(coords["south"], img, "yes")
+      makeline(coords["east"], img, "yes")
+      makeline(coords["west"], img, "yes")
+
+      print(f"Northern coords: {coords['north']}")
+      print(f"Southern coords: {coords['south']}")
+      print(f"Eastern coords: {coords['east']}")
+      print(f"Western coords: {coords['west']}")
+      img.save('output_with_line.png')
+      img.show()
+
+         
+def makeline(values, img, colourroll="yes"):
+    draw = ImageDraw.Draw(img)
+    if colourroll == "yes":
+        Plateusisthere = random.randint(0, 1)
+    else:
+        Plateusisthere = 0
+    if Plateusisthere == 1:
+        colour = Red
+    else:
+        colour = Blue
+
+    draw.line(values, fill=colour, width=5)
+    if Plateusisthere == 1:
+      values.append(("Plateu", "true"))
+    else:
+      values.append(("mountain", "true"))
+```
+The code runs make line for all for coords before printing the, and saving the image. When the Makeline function is run, it has 3 arguments: values, img, and colourroll.
+
