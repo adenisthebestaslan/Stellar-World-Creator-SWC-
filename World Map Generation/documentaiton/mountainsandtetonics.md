@@ -104,3 +104,21 @@ here is a quick explanation of all of them
 | values | none| the points that will be drawn to make a line|
 | img | none| the image in which the lines will be drawn ontop of|
 | colourroll| "yes"| checks if the colour will be rolled to create diffrent coloured barriers that will then be used in mountain generation to decide the placement of mountains.|
+It will make Plateausisthere 0 at the begining to avoid confusion about varible names if the user sets colourroll to 0.
+it will set the draw varible so we can draw on the image bedore checking if colourroll = yes. if it does, it rolls between 1 and 0 to see if the line will become red to for plateus. If not, it will simply not collour rhe lines. If Plateausisthere = 1:, it'll set the colour of that line to red. if it isnt, itll set it to blue. Itll then draw these lines by connecting the points and fillinf them with the coulour that was chosen earlier.
+finaly, it adds data based on plateus. If Plateusisthere = 1, itll set the end to Plateu, True. if its 0, itll set it to "Mountain, true"
+
+``
+def MountainGeneration(IMAGE,coords):
+    print("Generating mountains...")
+    img = Image.open(IMAGE)
+    for i in coords:
+        print(coords[i])
+``
+we then define mountain generation by setting two arguments: heres a table to understand them
+| argument | defualt | purpouse|
+|----------|:---------:|---------:|
+| IMAGE | none| the image we'll be drawing on| 
+|coords| none | the coords form earlier, which will be used  to make a line around the mountain.|
+
+it prints "generating mountains..." to show its starting the scrip before mkaing a image. for every item in the coords from earlier, we print them
