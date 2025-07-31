@@ -97,4 +97,10 @@ def makeline(values, img, colourroll="yes"):
       values.append(("mountain", "true"))
 ```
 The code runs make line for all for coords before printing the, and saving the image. When the Makeline function is run, it has 3 arguments: values, img, and colourroll.
+here is a quick explanation of all of them
 
+| argument | defualt | purpouse|
+|----------|:---------:|---------:|
+| values | none| the points that will be drawn to make a line|
+| img | none| the image in which the lines will be drawn ontop of|
+| colourroll| "yes"| checks if the colour will be rolled to create diffrent coloured barriers that will then be used in mountain generation to decide the placement of mountains.|
