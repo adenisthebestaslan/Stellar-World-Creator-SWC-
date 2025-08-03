@@ -43,25 +43,25 @@ to a varible named centercoords before appending these coords to the north, sout
         for _ in range(3):
             if direction == "north":
               current =(random.randint(cx, cx + cx // 2), random.randint(cy, cy * 2))
-              if current not in coords["north"]:
+              if current not in coords["north"] and is_on_land(img, current[0], current[1]) == True:
                 coords["north"].append(current)
             elif direction == "south":
               current = (random.randint(cx, cx + cx // 2), random.randint(0, cy // 2))
-              if current not in coords["south"]:
+              if current not in coords["south"] and is_on_land(img, current[0], current[1]) == True:
                 coords["south"].append(current)
             elif direction == "east":
               current = random.randint(0,cx), random.randint (0, cy // 2)
-              if current not in coords["east"]:
+              if current not in coords["east"] and is_on_land(img,current[0], current[1]) == True:
                 coords["east"].append(current)            
             elif direction == "west":
                current = random.randint(cx, cx * 2), random.randint(cy, cy + cy // 2)
-               if current not in coords["west"]:
+               if current not in coords["west"] and is_on_land(img, current[0], current[1]) == True:
                   coords["west"].append(current)
 ```
 
-We print our center coords before making Directions global. We prevoisly defined this varible in the begiing of this script, for which the documentation can be found [here](URL "seeandblob.md").
+We print our center coords before making Directions global. We prevoisly defined this varible in the begiing of this script, for which the documentation can be found [here](URL "seeandblob.md"). 
 for every item in direction, it assigns a random coord based on the direction listed. if this coord is in this list, it doenst assign it.
-Here is a table to understand how it generates values
+Here is a table to understand how it generates values.
 | direction | x | y|
 |----------|:---------:|---------:|
 | north | inbetween CX and CX plus half of CX| CY and CY times 2  |
@@ -69,7 +69,8 @@ Here is a table to understand how it generates values
 | east | inbetween 0 and CX| Inbetween 0 and CY divided by 2  |
 | east | inbetween CX and CX times 2| Inbetween 0 and CY divided by 2  |
 
-
+After we assign these values, we check if these cordinates fit two criteria:
+if they arent already in the coords and they arent touching water, we append them
 
 ## printign our image:
 ```
@@ -119,10 +120,20 @@ finaly, it adds data based on plateus. If Plateusisthere = 1, itll set the end t
 
 ``
 def MountainGeneration(IMAGE,coords):
-    print("Generating mountains...")
     img = Image.open(IMAGE)
+    draw = ImageDraw.Draw(img)
+    print("Generating mountains...")
     for i in coords:
         print(coords[i])
+        # checkcoordsforwater(coords[i],img)
+        if ("plateau","true") in coords[i]:
+          coordstodraw = coords[i][:4]
+          draw.line(coordstodraw, fill=Grey, width=3)
+        else:
+           coordstodraw = coords[i][:4]
+           draw.line(coordstodraw, fill=LightGrey, width=3)
+    img.save('finalmountains.png')
+    img.show()          
 ``
 we then define mountain generation by setting two arguments: heres a table to understand them
 | argument | defualt | purpouse|
@@ -131,3 +142,4 @@ we then define mountain generation by setting two arguments: heres a table to un
 |coords| none | the coords form earlier, which will be used  to make a line around the mountain.|
 
 it prints "generating mountains..." to show its starting the scrip before mkaing a image. for every item in the coords from earlier, we print them
+for every item in courds, it prints it. If it contains the tag (Plateau Treu) it willl make the lines thinner and darker, if not, it will make em larger and  lighter. We then save the final product before showing it.
