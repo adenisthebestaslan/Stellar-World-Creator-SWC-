@@ -2,6 +2,13 @@
 
 ## the begining
 ```
+
+def is_on_land(img, x, y):
+    try:
+        pixel = img.getpixel((int(x), int(y)))
+        return pixel == Black  # Land is black
+    except IndexError:
+        return False  
 coords = {
     "north": [],
     "south": [],
@@ -20,6 +27,7 @@ def MountainTetonicGeneration(IMAGE):
       coords['west'].append((cx, cy))
 
 ```
+First thing, we define a function to check if a pixel is on land or not: we try seeing what colour the pixel is, and if that pixel is black, then we will return true. if not, we will return false.
 we start by setting up our coords, north south east and west. this dictionaty will allow us to make the lines indivusaly and keep good track.
 we'll then define the function MountainTetonicGeneration, with 1 argument(IMAGE), before using that argument to open a new image.
 The width and hight of the image are kept track of, before both of them respectivley are divided by two in order to get our center. We add these
