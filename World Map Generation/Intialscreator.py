@@ -5,6 +5,8 @@ Directions = ["north", "south", "east", "west"]
 Blue= (50, 147, 168)
 Black = (0, 0, 0)
 Red= (201, 26, 26)
+Grey = (146,150,147)
+LightGrey = (185, 189, 186)
 
 
 def Generate(colour=Blue):
@@ -13,6 +15,14 @@ def Generate(colour=Blue):
   img = Image.new('RGB', (width, height), color=Blue)
   img.save("original.png")
 
+def is_on_land(img, x, y):
+    try:
+        pixel = img.getpixel((int(x), int(y)))
+        return pixel == Black  # Land is black
+    except IndexError:
+        return False  
+    
+    
 # Generate()
 #pi = 3.14, so 2pi/circumfrence= 6.28.
 #i had to learn about radius for this!
@@ -71,6 +81,13 @@ coords = {
     "west": []
     }
 
+def is_on_land(img, x, y):
+    try:
+        pixel = img.getpixel((int(x), int(y)))
+        return True  # Land is black
+    except IndexError:
+        return False  
+    
 def MountainTetonicGeneration(IMAGE):
       img = Image.open(IMAGE)
       width, height = img.size
@@ -89,20 +106,21 @@ def MountainTetonicGeneration(IMAGE):
         for _ in range(3):
             if direction == "north":
               current =(random.randint(cx, cx + cx // 2), random.randint(cy, cy * 2))
-              if current not in coords["north"]:
+              if current not in coords["north"] and is_on_land(img, current[0], current[1]) == True:
                 coords["north"].append(current)
             elif direction == "south":
               current = (random.randint(cx, cx + cx // 2), random.randint(0, cy // 2))
-              if current not in coords["south"]:
+              if current not in coords["south"] and is_on_land(img, current[0], current[1]) == True:
                 coords["south"].append(current)
             elif direction == "east":
               current = random.randint(0,cx), random.randint (0, cy // 2)
-              if current not in coords["east"]:
+              if current not in coords["east"] and is_on_land(img,current[0], current[1]) == True:
                 coords["east"].append(current)            
             elif direction == "west":
                current = random.randint(cx, cx * 2), random.randint(cy, cy + cy // 2)
-               if current not in coords["west"]:
+               if current not in coords["west"] and is_on_land(img, current[0], current[1]) == True:
                   coords["west"].append(current)
+            
                
       makeline(coords["north"], img, "yes")
       makeline(coords["south"], img, "yes")
@@ -146,10 +164,27 @@ def makeline(values, img, colourroll="yes"):
        
 
 def MountainGeneration(IMAGE,coords):
-    print("Generating mountains...")
     img = Image.open(IMAGE)
+    draw = ImageDraw.Draw(img)
+    print("Generating mountains...")
     for i in coords:
         print(coords[i])
+        # checkcoordsforwater(coords[i],img)
+        if ("plateau","true") in coords[i]:
+          coordstodraw = coords[i][:4]
+          draw.line(coordstodraw, fill=Grey, width=3)
+        else:
+           coordstodraw = coords[i][:4]
+           draw.line(coordstodraw, fill=LightGrey, width=3)
+    img.save('finalmountains.png')
+    img.show()
+        
+           
+
 
     
 
+
+MountainTetonicGeneration("my_blob.png")
+
+MountainGeneration("my_blob.png", coords)
