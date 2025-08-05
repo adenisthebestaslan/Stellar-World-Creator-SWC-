@@ -1,9 +1,11 @@
 from PIL import Image,ImageDraw
 import math
 import random
+import copy
+
 Directions = ["north", "south", "east", "west"]
 Blue= (50, 147, 168)
-Black = (0, 0, 0)
+Black = (0, 0, 0,255)
 Red= (201, 26, 26)
 Grey = (146,150,147)
 LightGrey = (185, 189, 186)
@@ -16,11 +18,17 @@ def Generate(colour=Blue):
   img.save("original.png")
 
 def is_on_land(img, x, y):
-    try:
-        pixel = img.getpixel((int(x), int(y)))
-        return pixel == Black  # Land is black
-    except IndexError:
-        return False  
+  pixel = img.getpixel((int(x), int(y)))
+  try:
+    if  pixel[:3] == Black[:3]:
+        print(f"Checked ({x}, {y}) = {pixel}")
+        return pixel[:3] == (0, 0, 0)
+# Land is black
+    else:
+      return False  
+  except IndexError:
+    return False  # Coordinates out of image bounds
+
     
     
 # Generate()
@@ -81,18 +89,13 @@ coords = {
     "west": []
     }
 
-def is_on_land(img, x, y):
-    try:
-        pixel = img.getpixel((int(x), int(y)))
-        return True  # Land is black
-    except IndexError:
-        return False  
-    
+
 def MountainTetonicGeneration(IMAGE):
       img = Image.open(IMAGE)
       width, height = img.size
-      cy = width // 2
-      cx = height // 2
+      cx = width // 2
+      cy = height // 2
+
       centercords = (cx, cy)
       coords['north'].append((cx, cy))
       coords['south'].append((cx, cy))
@@ -105,11 +108,12 @@ def MountainTetonicGeneration(IMAGE):
       for direction in Directions:
         for _ in range(3):
             if direction == "north":
-              current =(random.randint(cx, cx + cx // 2), random.randint(cy, cy * 2))
+              current =(random.randint(cx, cx + 30), random.randint(cy, height - 1))
               if current not in coords["north"] and is_on_land(img, current[0], current[1]) == True:
                 coords["north"].append(current)
+                print("hi")
             elif direction == "south":
-              current = (random.randint(cx, cx + cx // 2), random.randint(0, cy // 2))
+              current = (random.randint(cx, cx + 30 ), random.randint(0, cy // 2))
               if current not in coords["south"] and is_on_land(img, current[0], current[1]) == True:
                 coords["south"].append(current)
             elif direction == "east":
@@ -117,7 +121,7 @@ def MountainTetonicGeneration(IMAGE):
               if current not in coords["east"] and is_on_land(img,current[0], current[1]) == True:
                 coords["east"].append(current)            
             elif direction == "west":
-               current = random.randint(cx, cx * 2), random.randint(cy, cy + cy // 2)
+               current = random.randint(cx,width - 1), random.randint(cy, cy + 30)
                if current not in coords["west"] and is_on_land(img, current[0], current[1]) == True:
                   coords["west"].append(current)
             
@@ -167,14 +171,19 @@ def MountainGeneration(IMAGE,coords):
     img = Image.open(IMAGE)
     draw = ImageDraw.Draw(img)
     print("Generating mountains...")
-    for i in coords:
-        print(coords[i])
+    coordsforgen = copy.deepcopy(coords)
+    for i in coordsforgen:
+        print(coordsforgen[i])
         # checkcoordsforwater(coords[i],img)
-        if ("plateau","true") in coords[i]:
-          coordstodraw = coords[i][:4]
+        if ("Plateu","true") in coordsforgen[i]:
+          coordsforgen[i].remove(("Plateu","true"))
+          coordstodraw = coordsforgen[i]
+          print(coordstodraw)
           draw.line(coordstodraw, fill=Grey, width=3)
-        else:
-           coordstodraw = coords[i][:4]
+        elif ("mountain","true") in coordsforgen[i]:
+           coordsforgen[i].remove(("mountain","true"))
+           coordstodraw = coordsforgen[i]
+           print(coordstodraw)
            draw.line(coordstodraw, fill=LightGrey, width=3)
     img.save('finalmountains.png')
     img.show()
@@ -188,3 +197,4 @@ def MountainGeneration(IMAGE,coords):
 MountainTetonicGeneration("my_blob.png")
 
 MountainGeneration("my_blob.png", coords)
+
