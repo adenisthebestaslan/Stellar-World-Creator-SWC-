@@ -120,7 +120,7 @@ It will make Plateausisthere 0 at the begining to avoid confusion about varible 
 it will set the draw varible so we can draw on the image bedore checking if colourroll = yes. if it does, it rolls between 1 and 0 to see if the line will become red to for plateus. If not, it will simply not collour rhe lines. If Plateausisthere = 1:, it'll set the colour of that line to red. if it isnt, itll set it to blue. Itll then draw these lines by connecting the points and fillinf them with the coulour that was chosen earlier.
 finaly, it adds data based on plateus. If Plateusisthere = 1, itll set the end to Plateu, True. if its 0, itll set it to "Mountain, true"
 
-``
+```
 def MountainGeneration(IMAGE,coords):
     img = Image.open(IMAGE)
     draw = ImageDraw.Draw(img)
@@ -141,7 +141,7 @@ def MountainGeneration(IMAGE,coords):
            draw.line(coordstodraw, fill=LightGrey, width=3)
     img.save('finalmountains.png')
     img.show()          
-``
+```
 we then define mountain generation by setting two arguments: heres a table to understand them
 | argument | defualt | purpouse|
 |----------|:---------:|---------:|
