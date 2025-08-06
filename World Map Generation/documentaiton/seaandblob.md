@@ -11,7 +11,23 @@ Red= (201, 26, 26)`
 
 first, we import PIL, before using Math and random.
 we define some universal dirrections before setting up colors
+## if on land
+```
+def is_on_land(img, x, y):
+  pixel = img.getpixel((int(x), int(y)))
+  try:
+    if  pixel[:3] == Black[:3]:
+        print(f"Checked ({x}, {y}) = {pixel}")
+        return pixel[:3] == (0, 0, 0)
+# Land is black
+    else:
+      return False  
+  except IndexError:
+    return False  # Coordinates out of image bounds
 
+```
+we then try to define a function. If the pixel Inputed is Black, it returns the value as true,
+if the land isnt black, it returns False, and it also returns false if we have a error
 ## making the sea
 `def Generate(colour=Blue):
   width = 800
