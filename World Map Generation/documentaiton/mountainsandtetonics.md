@@ -42,11 +42,12 @@ to a varible named centercoords before appending these coords to the north, sout
       for direction in Directions:
         for _ in range(3):
             if direction == "north":
-              current =(random.randint(cx, cx + cx // 2), random.randint(cy, cy * 2))
+              current =(random.randint(cx, cx + 30), random.randint(cy, height - 1))
               if current not in coords["north"] and is_on_land(img, current[0], current[1]) == True:
                 coords["north"].append(current)
+                print("hi")
             elif direction == "south":
-              current = (random.randint(cx, cx + cx // 2), random.randint(0, cy // 2))
+              current = (random.randint(cx, cx + 30 ), random.randint(0, cy // 2))
               if current not in coords["south"] and is_on_land(img, current[0], current[1]) == True:
                 coords["south"].append(current)
             elif direction == "east":
@@ -54,9 +55,10 @@ to a varible named centercoords before appending these coords to the north, sout
               if current not in coords["east"] and is_on_land(img,current[0], current[1]) == True:
                 coords["east"].append(current)            
             elif direction == "west":
-               current = random.randint(cx, cx * 2), random.randint(cy, cy + cy // 2)
+               current = random.randint(cx,width - 1), random.randint(cy, cy + 30)
                if current not in coords["west"] and is_on_land(img, current[0], current[1]) == True:
                   coords["west"].append(current)
+            
 ```
 
 We print our center coords before making Directions global. We prevoisly defined this varible in the begiing of this script, for which the documentation can be found [here](URL "seeandblob.md"). 
@@ -64,10 +66,10 @@ for every item in direction, it assigns a random coord based on the direction li
 Here is a table to understand how it generates values.
 | direction | x | y|
 |----------|:---------:|---------:|
-| north | inbetween CX and CX plus half of CX| CY and CY times 2  |
+| north | inbetween CX and CX plus half of CX| CY and  height - 1|
 | South | inbetween CX and CX plus half of CX   | Inbetween 0 and CY divided by 2  |
 | east | inbetween 0 and CX| Inbetween 0 and CY divided by 2  |
-| east | inbetween CX and CX times 2| Inbetween 0 and CY divided by 2  |
+| east | inbetween CX and width - 1| Inbetween 0 and CY divided by 2  |
 
 After we assign these values, we check if these cordinates fit two criteria:
 if they arent already in the coords and they arent touching water, we append them
@@ -123,14 +125,19 @@ def MountainGeneration(IMAGE,coords):
     img = Image.open(IMAGE)
     draw = ImageDraw.Draw(img)
     print("Generating mountains...")
-    for i in coords:
-        print(coords[i])
+    coordsforgen = copy.deepcopy(coords)
+    for i in coordsforgen:
+        print(coordsforgen[i])
         # checkcoordsforwater(coords[i],img)
-        if ("plateau","true") in coords[i]:
-          coordstodraw = coords[i][:4]
+        if ("Plateu","true") in coordsforgen[i]:
+          coordsforgen[i].remove(("Plateu","true"))
+          coordstodraw = coordsforgen[i]
+          print(coordstodraw)
           draw.line(coordstodraw, fill=Grey, width=3)
-        else:
-           coordstodraw = coords[i][:4]
+        elif ("mountain","true") in coordsforgen[i]:
+           coordsforgen[i].remove(("mountain","true"))
+           coordstodraw = coordsforgen[i]
+           print(coordstodraw)
            draw.line(coordstodraw, fill=LightGrey, width=3)
     img.save('finalmountains.png')
     img.show()          
@@ -141,5 +148,5 @@ we then define mountain generation by setting two arguments: heres a table to un
 | IMAGE | none| the image we'll be drawing on| 
 |coords| none | the coords form earlier, which will be used  to make a line around the mountain.|
 
-it prints "generating mountains..." to show its starting the scrip before mkaing a image. for every item in the coords from earlier, we print them
-for every item in courds, it prints it. If it contains the tag (Plateau Treu) it willl make the lines thinner and darker, if not, it will make em larger and  lighter. We then save the final product before showing it.
+it prints "generating mountains..." to show its starting the scrip before mkaing a image. we make a deep coppy of the coords. for every item in the coords from earlier, we print them
+for every item in courds, it prints it. If it contains the tag (Plateau Treu) it will remove the tag and make the lines thinner and darker, if not, it will also remove the tag and make them larger and  lighter. We then save the final product before showing it.
