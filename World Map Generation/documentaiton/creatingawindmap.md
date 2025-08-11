@@ -61,14 +61,33 @@ we set up draw before gettning the size form the immage. the center will be half
     windmappoints["inbetween"].append(random.choice(directions))
     windmappoints["inbetween"].append(((winter3),((winter3[0] * 9/5) + 32),((winter3[1] * 9/5) + 32))) # (1, 2)
 ```
-for each windmappoint we append a couple of stats.
+for each windmappoint we append a couple of stats. and calculate the ferinhight of tempreture
 here is a table explaining it
 the area is defined with a point and a tempreature, as well as a direction, but that doesnt have any special rules
 | area | point | tempretire|
 |----------|:---------:|---------:|
 | 1 | 1 to center width|1 - 17 C|
-| 2 | none| the image in which the lines will be drawn ontop of|
-| colourroll| "yes"| checks if the colour will be rolled to create diffrent coloured barriers that will then be used in mountain generation to decide the placement of mountains.|
+| 2 | Point1y + 15/ heigh(200)| 35-60|
+| 3 | windmappoints"point2"-windmappoints1)| 17-35|
+we calculate the values for er
 
+```
 
+    print(windmappoints)
+
+    linecoords = [((1,windmappoints["point1"][0]),(width - 1,windmappoints["point1"][0])),((1,windmappoints["point2"][0]),(width - 1,windmappoints["point2"][0])),]
+    print(linecoords)
+    draw.line(linecoords[0], fill=Red, width=3)
+    draw.line(linecoords[1], fill=Red, width=3)
+    font = ImageFont.load_default()
+    draw.text((0, windmappoints["point1"][0]), str(windmappoints["point1"]), fill=Blue, font=font)
+    draw.text((0, (windmappoints["point1"][0] + windmappoints["inbetween"][0] // 2)), str(windmappoints["inbetween"]), fill=Blue, font=font)
+    draw.text((0, windmappoints["point2"][0]), str(windmappoints["point2"]), fill=Blue, font=font)
+    
+
+    img.save('windmap.png')
+    img.show()
+````
+
+We print our points before saving our coords in a list of tuples called linecoords. We draw linecoords 0 {point1} and 1 (point2) as red lines before putting text near each areas respective locaiton
 
