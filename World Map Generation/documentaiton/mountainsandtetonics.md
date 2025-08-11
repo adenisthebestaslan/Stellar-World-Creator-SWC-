@@ -150,3 +150,24 @@ we then define mountain generation by setting two arguments: heres a table to un
 
 it prints "generating mountains..." to show its starting the scrip before mkaing a image. we make a deep coppy of the coords. for every item in the coords from earlier, we print them
 for every item in courds, it prints it. If it contains the tag (Plateau Treu) it will remove the tag and make the lines thinner and darker, if not, it will also remove the tag and make them larger and  lighter. We then save the final product before showing it.
+
+
+```
+def savedata(coords):
+      print("...................")
+      filepath = "output.json"
+      with open(filepath, "w") as json_file:
+        json.dump(coords, json_file)
+```
+we create a function called savedata, and then add coords as a argument. We print a check before defining our filepath as "output.json"
+we open filepath in write mode as a json file before dumping our coords.
+
+```
+MountainTetonicGeneration("my_blob.png")
+savedata(coords)
+MountainGeneration("my_blob.png", coords)
+```
+we run MTG,
+Save DATA,
+and Mountain Generation
+
