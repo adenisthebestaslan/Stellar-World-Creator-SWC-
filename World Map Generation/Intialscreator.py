@@ -2,7 +2,7 @@ from PIL import Image,ImageDraw
 import math
 import random
 import copy
-
+import json
 Directions = ["north", "south", "east", "west"]
 Blue= (50, 147, 168)
 Black = (0, 0, 0,255)
@@ -188,13 +188,17 @@ def MountainGeneration(IMAGE,coords):
     img.save('finalmountains.png')
     img.show()
         
-           
+
+print(coords)      
+def savedata(coords):
+      print("...................")
+      filepath = "output.json"
+      with open(filepath, "w") as json_file:
+        json.dump(coords, json_file)
 
 
     
 
-
 MountainTetonicGeneration("my_blob.png")
-
+savedata(coords)
 MountainGeneration("my_blob.png", coords)
-
