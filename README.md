@@ -1,3 +1,5 @@
+# NOTICE
+less updates since school will start soon
 
 # What is this?
 I had been building worlds for a couple of months before deciding to make this. Mangar, which is a city in one of my worlds, was the original namesake of my web editor, before i changed the name to the turkish word for Draft
