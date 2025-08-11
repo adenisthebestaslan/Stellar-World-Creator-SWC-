@@ -1,15 +1,17 @@
 # Generating the sea:
 
 ## begining
-`from PIL import Image,ImageDraw
+```from PIL import Image,ImageDraw
 import math
 import random
+import json
 Directions = ["north", "south", "east", "west"]
 Blue= (50, 147, 168)
 Black = (0, 0, 0)
-Red= (201, 26, 26)`
+Red= (201, 26, 26)
+```
 
-first, we import PIL, before using Math and random.
+first, we import PIL, before using Math, random and json.
 we define some universal dirrections before setting up colors
 ## if on land
 ```
