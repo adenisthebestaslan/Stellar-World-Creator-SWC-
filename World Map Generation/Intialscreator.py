@@ -66,7 +66,6 @@ def generateBlob(radius=100, center=(100, 100),points=random.randint(5, 15)):
   #saves the blob as a png
   print(pointslist)
 
-generateBlob(radius=50, center=(100, 100),)
 def squarepoints(rangenumber=1):
   global offsets
   global newoffsets
@@ -197,8 +196,10 @@ def savedata(coords):
         json.dump(coords, json_file)
 
 
+if __name__ == "__main__":
+    generateBlob(radius=50, center=(100, 100),)
+    MountainTetonicGeneration("my_blob.png")
+    savedata(coords)
+    MountainGeneration("my_blob.png", coords)
     
 
-MountainTetonicGeneration("my_blob.png")
-savedata(coords)
-MountainGeneration("my_blob.png", coords)
