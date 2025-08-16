@@ -1,6 +1,8 @@
 import json
 import random
 import PIL
+import Intialscreator
+from Intialscreator import is_on_land
 from PIL import Image, ImageDraw, ImageFont
 Red= (201, 26, 26)
 Blue= (50, 147, 168)
@@ -18,6 +20,7 @@ windmappoints = {"point1" : [],
 
 directions = ["east", "west", "north", "south"]
 def createwind(IMAGE):
+    windmappoints = {"point1": [], "inbetween": [], "point2": []}
     img = Image.open(IMAGE)
     draw = ImageDraw.Draw(img)
     width, height = img.size
@@ -34,7 +37,7 @@ def createwind(IMAGE):
     print(windmappoints)
     
     winter2 = (w := random.randint(35, 46), random.randint(w, 60))
-    windmappoints["point2"].append(random.randint(windmappoints["point1"][0]+15,height))
+    windmappoints["point2"].append(random.randint(windmappoints["point1"][0]+15,height - 1))
     windmappoints["point2"].append(random.choice(directions))
     windmappoints["point2"].append(((winter2),((winter2[0] * 9/5) + 32),((winter2[1] * 9/5) + 32))) # (1, 2)
     
@@ -75,3 +78,38 @@ riverdata = {
 
 
 # createrivers(coords, riverdata)
+
+
+def createrivers(coords,IMAGE):
+    img = Image.open(IMAGE)
+    draw = ImageDraw.Draw(img)
+    for i in coords.items():
+        riverlist = []
+        print(i)
+        if ["mountain", "true"] in i[1]:
+            print("approoved")
+            ValidCoordsRivers= i[1].copy()
+            ValidCoordsRivers.pop()
+            print(ValidCoordsRivers)
+            print(i[1])
+            point = random.choice(ValidCoordsRivers)
+            print(point)
+            riverlist.append(point)
+            for i in range(2):
+                print("...")
+
+                newitem = ((riverlist[-1][0] + random.randint(30,40),riverlist[-1][1] + random.randint(30,40)))
+                print(newitem)
+                if is_on_land(img, newitem[0], newitem[1]) == True and newitem[0] and newitem[1] < 200 :
+                    riverlist.append(newitem)
+            riverlist = [tuple(pt) for pt in riverlist]
+
+            draw.line(riverlist, fill=Blue, width=3)
+    print(f"riverlist: {riverlist}")
+    img.save('rivers.png')
+
+
+createwind(r"C:\Users\adena\OneDrive\Desktop\Stellar\my_blob.png")   
+
+createrivers(coords, r"C:\Users\adena\OneDrive\Desktop\Stellar\windmap.png")
+
