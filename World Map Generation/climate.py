@@ -20,6 +20,7 @@ windmappoints = {"point1" : [],
 
 directions = ["east", "west", "north", "south"]
 def createwind(IMAGE):
+    global windmappoints
     windmappoints = {"point1": [], "inbetween": [], "point2": []}
     img = Image.open(IMAGE)
     draw = ImageDraw.Draw(img)
@@ -65,20 +66,6 @@ def createwind(IMAGE):
 
 riverdata = {
 }
-# def createrivers(coords, riverdata):
-#     for i in coords.items():
-#         print(i)
-#         riveroptions = [item for item in i if isinstance(item, tuple) and all(isinstance(n, (int, float)) for n in item)]
-#         if ["mountain", "true"] in i:
-#             riverdata[f"river{i[0]}"] = random.choice(riveroptions)[1] + 20
-#             print(riverdata)
-            
-
-
-
-
-# createrivers(coords, riverdata)
-
 
 def createrivers(coords,IMAGE):
     img = Image.open(IMAGE)
@@ -108,8 +95,51 @@ def createrivers(coords,IMAGE):
     print(f"riverlist: {riverlist}")
     img.save('rivers.png')
 
+def climategen(windmappoints, windpoint, riverdata=".", coords="."):
+    print(".")
+    print(windmappoints)
+    print(windpoint)
 
-createwind(r"C:\Users\adena\OneDrive\Desktop\Stellar\my_blob.png")   
+    windirection = windpoint[1][1]
+    print(f"windirection: {windirection}")
+    print(f"{windpoint[0]}")
+    keys = list(windmappoints.keys())
+    print(keys)
+    print(windpoint[0])
+    if windpoint[0] == "point2":
+        currentindex = 2
+        final = True
+        print(currentindex - 1)
+        lastpoint = windmappoints[keys[currentindex - 1]]
+        print(lastpoint)
+        print(f"last {lastpoint}")
 
-createrivers(coords, r"C:\Users\adena\OneDrive\Desktop\Stellar\windmap.png")
+    else:
+        currentindex = keys.index(windpoint[0])
+        lastpoint = windmappoints[keys[currentindex + 1]]
+        final = False
+    
+    if windpoint[1][1] != lastpoint[1]:
+        climatewinddirection = (f"{windpoint[1][1]}{lastpoint[1]}")
+    else:
+        climatewinddirection = ({windpoint[1][1]})
+    print(climatewinddirection)
+    climatetempratures = []
+    climatetempratures.append(list(windpoint[1][2][0]))
+    climatetempratures.append(list(lastpoint[2][0]))
+    climatetempfinal = (climatetempratures[0][0] + climatetempratures[1][0]/2,climatetempratures[0][1] + climatetempratures[1][1] /2)
+    print(climatetempratures)
+    print(climatetempfinal)
+
+
+createwind(r"my_blob.png")
+
+
+
+createrivers(coords, r"finalmountains.png")
+
+windpoint = ("point2", windmappoints["point2"])
+print(f"windpoint {windpoint}")
+climategen(windmappoints, windpoint, riverdata, coords)
+
 
