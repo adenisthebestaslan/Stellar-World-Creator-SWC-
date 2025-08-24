@@ -201,5 +201,4 @@ if __name__ == "__main__":
     MountainTetonicGeneration("my_blob.png")
     savedata(coords)
     MountainGeneration("my_blob.png", coords)
-    
 
