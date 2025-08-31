@@ -6,7 +6,6 @@ from Intialscreator import is_on_land
 from PIL import Image, ImageDraw, ImageFont
 Red= (201, 26, 26)
 Blue= (50, 147, 168)
-
 with open("output.json", 'r', encoding='utf-8') as f:
     json1 = f.read()  # read file content as a string
 print(json1)
@@ -66,34 +65,59 @@ def createwind(IMAGE):
 
 riverdata = {
 }
+riverlist = []
 
 def createrivers(coords,IMAGE):
     img = Image.open(IMAGE)
     draw = ImageDraw.Draw(img)
+    width, height = img.size
+
     for i in coords.items():
         riverlist = []
         print(i)
         if ["mountain", "true"] in i[1]:
             print("approoved")
+            
             ValidCoordsRivers= i[1].copy()
             ValidCoordsRivers.pop()
-            print(ValidCoordsRivers)
+            print(f"...l...{ValidCoordsRivers}")
             print(i[1])
-            point = random.choice(ValidCoordsRivers)
-            print(point)
-            riverlist.append(point)
-            for i in range(2):
-                print("...")
+            for itempoint in range(3):
+                point = random.choice(ValidCoordsRivers)
+                print(point)
+                riverlist.append([point])
+                print(f"point:{point}")
+                addtooriverlist = []
+                for item in range(6):
+                    print()
+                    print("...")
 
-                newitem = ((riverlist[-1][0] + random.randint(30,40),riverlist[-1][1] + random.randint(30,40)))
-                print(newitem)
-                if is_on_land(img, newitem[0], newitem[1]) == True and newitem[0] and newitem[1] < 200 :
-                    riverlist.append(newitem)
-            riverlist = [tuple(pt) for pt in riverlist]
+                    newitem = ((riverlist[itempoint][-1][0] + random.randint(30,40),riverlist[itempoint][-1][1] + random.randint(30,40)+ 4))
+                    print(newitem)
+                    if newitem[0]  < width - 1  and  newitem[1] < height - 1:
+                        if is_on_land(img, newitem[0], newitem[1]) == True:
+                            addtooriverlist.append(tuple(newitem))
+                if addtooriverlist:  # only add if non-empty
+                    riverlist[itempoint].extend(addtooriverlist)
+                    print(f"river lisyt{riverlist}")
+                
+            for i in riverlist:
+                i = [tuple(pt) for pt in i]
+                print(f"testing: {i}")
+                draw.line(i, fill=Blue, width=3)
+    
+            
+            # riverlist = [tuple(pt) for pt in riverlist]
+            #  #checks if each item in riverlist is a tuple
+            # draw.line(riverlist, fill=Blue, width=3)
+            # riverdata[i[0]] = riverlist
 
-            draw.line(riverlist, fill=Blue, width=3)
-    print(f"riverlist: {riverlist}")
+
+
+    print(f"riverlist: {riverdata}")
     img.save('rivers.png')
+    img.show()
+
 
 def climategen(windmappoints, windpoint, riverdata=".", coords="."):
     print(".")
@@ -131,15 +155,46 @@ def climategen(windmappoints, windpoint, riverdata=".", coords="."):
     print(climatetempratures)
     print(climatetempfinal)
 
-
-createwind(r"my_blob.png")
+def preciptationgen(centre,coords,riverlist):
+    preciptitation = ()
+    part1preciptation = 0
+    print(".")
+    roundedcentre = (centre[0] // 100) * 100
+    print(roundedcentre)
+    for i in coords.items():
+        print(i[1][1][0])
+        if i[1][1][0] > roundedcentre and i[1][1][0] < (roundedcentre + roundedcentre / 2):
+            #takes our rounded centre and adds it by a 10th of half the elevation
+            part1preciptation = roundedcentre / 10 + (i[1][1][0] - roundedcentre / 2) / 10
+        else:
+            part1preciptation = roundedcentre / 10 +30
+    
+    print(part1preciptation)
+    print(riverlist)
+    finalx = 0
+    finaly = 0
+    for i in  riverlist:
+        print(f"RIVER {i}")
+        finalx = sum(pt[0] for pt in i) / len(i)
+        finaly = sum(pt[1] for pt in i) / len(i)
+    divisorriver = (finalx,finaly)
+    if divisorriver[0] > roundedcentre and divisorriver[0] < divisorriver[0] + 30:
+        part2preciptation = (divisorriver[0] - roundedcentre) / 5
+    else:
+        part2preciptation = 10
+        print(part1preciptation + part2preciptation)
+        preciptitation = ((( (part1preciptation + part2preciptation) / 2) / 3 * 2) + 10, ((part1preciptation + part2preciptation) / 2) / 3 + 10)
+    print(f"inches of rainfall each year: {preciptitation}")
 
 
 
 createrivers(coords, r"finalmountains.png")
+preciptationgen((123,123),coords,riverlist)
 
-windpoint = ("point2", windmappoints["point2"])
-print(f"windpoint {windpoint}")
-climategen(windmappoints, windpoint, riverdata, coords)
+# createwind(r"my_blob.png")
 
 
+
+# windpoint = ("point2", windmappoints["point2"])
+# print(f"windpoint {windpoint}")
+# climategen(windmappoints, windpoint, riverdata, coords)
