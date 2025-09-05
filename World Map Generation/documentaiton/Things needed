@@ -13,9 +13,11 @@ Generate Map:
           make Wind map.
           do fancy calculations:
             calculate rivers based on mountain positon
-            calculate wind flow's effects on climate
+            precipitation
+            check fauna
    Create Fauna
      scan image for climate zones and then retrive fauna and flora list from the databases.
+
 
 
      0.2.2
