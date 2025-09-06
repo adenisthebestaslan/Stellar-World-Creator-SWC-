@@ -1,0 +1,16 @@
+<plants>
+<herbs>
+   <thyme>36</thyme>
+   <rosemarry>30</rosemarry>
+   <dill>77</dill>
+</herbs>
+<flowers>
+   <daisies>45</daisies>
+   <tulips>60</tulips>
+   <sunflowers>50</sunflowers>
+</flowers>
+<trees>
+   <oak>80</oak>
+   <pine>90</pine>
+</trees>
+</plants>
