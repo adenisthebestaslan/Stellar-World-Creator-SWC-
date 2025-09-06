@@ -28,7 +28,6 @@ def is_on_land(img, x, y):
       return False  
   except IndexError:
     return False  # Coordinates out of image bounds
-
     
     
 # Generate()
@@ -66,19 +65,6 @@ def generateBlob(radius=100, center=(100, 100),points=random.randint(5, 15)):
   #saves the blob as a png
   print(pointslist)
 
-def squarepoints(rangenumber=1):
-  global offsets
-  global newoffsets
-  offsets = []
-  newoffsets = []
-
-  for i in range(4):
-    x = (random.randint(0 - rangenumber, rangenumber))
-    y = (random.randint(0 - rangenumber, rangenumber))
-    coord = (x,y)
-    print(coord)
-    offsets.append(coord)
-    print(offsets)
 
 
 coords = {
@@ -104,25 +90,22 @@ def MountainTetonicGeneration(IMAGE):
       print(f"Center cords: {centercords}")
       global Directions
       Plateusisthere = random.randint(0, 1)
+      directionchecks = {
+      "north": {"x": (cx, cx + 30), "y": (cy, height - 1)},
+      "south": {"x": (cx, cx + 30), "y": (0, cy // 2)},
+      "east":  {"x": (0, cx), "y": (0, cy // 2)},
+      "west":  {"x": (cx, width - 1), "y": (cy, cy + 30)}
+      }
       for direction in Directions:
+
         for _ in range(3):
-            if direction == "north":
-              current =(random.randint(cx, cx + 30), random.randint(cy, height - 1))
-              if current not in coords["north"] and is_on_land(img, current[0], current[1]) == True:
-                coords["north"].append(current)
-                print("hi")
-            elif direction == "south":
-              current = (random.randint(cx, cx + 30 ), random.randint(0, cy // 2))
-              if current not in coords["south"] and is_on_land(img, current[0], current[1]) == True:
-                coords["south"].append(current)
-            elif direction == "east":
-              current = random.randint(0,cx), random.randint (0, cy // 2)
-              if current not in coords["east"] and is_on_land(img,current[0], current[1]) == True:
-                coords["east"].append(current)            
-            elif direction == "west":
-               current = random.randint(cx,width - 1), random.randint(cy, cy + 30)
-               if current not in coords["west"] and is_on_land(img, current[0], current[1]) == True:
-                  coords["west"].append(current)
+            xr = directionchecks[direction]["x"]
+            yr = directionchecks[direction]["y"]
+            current = (random.randint(*xr), random.randint(*yr))
+            if current not in coords[direction] and is_on_land(img, current[0], current[1]):
+              coords[direction].append(current)
+            print(f"Added {current} to {direction}")
+
             
                
       makeline(coords["north"], img, "yes")
@@ -197,8 +180,7 @@ def savedata(coords):
 
 
 if __name__ == "__main__":
-    generateBlob(radius=50, center=(100, 100),)
+    # generateBlob(radius=50, center=(100, 100),)
     MountainTetonicGeneration("my_blob.png")
-    savedata(coords)
+    # savedata(coords)
     MountainGeneration("my_blob.png", coords)
-
