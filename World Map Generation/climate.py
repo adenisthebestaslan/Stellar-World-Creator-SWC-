@@ -4,8 +4,12 @@ import PIL
 import Intialscreator
 from Intialscreator import is_on_land
 from PIL import Image, ImageDraw, ImageFont
+import xml.etree.ElementTree as ET
 Red= (201, 26, 26)
 Blue= (50, 147, 168)
+
+tree = ET.parse('plants.xml')
+
 with open("output.json", 'r', encoding='utf-8') as f:
     json1 = f.read()  # read file content as a string
 print(json1)
@@ -35,6 +39,9 @@ def createwind(IMAGE):
     windmappoints["point1"].append(((winter1),((winter1[0] * 9/5) + 32),((winter1[1] * 9/5) + 32))) # (1, 2)
     
     print(windmappoints)
+
+    #I usally do RUP: repeat until painfull. We only do this 3 times, so its fine I guess. But for a longer one, like that check for the mountain range coords, I decided that i shouldnt be doing
+    #that in these cases.
     
     winter2 = (w := random.randint(35, 46), random.randint(w, 60))
     windmappoints["point2"].append(random.randint(windmappoints["point1"][0]+15,height - 1))
@@ -67,6 +74,7 @@ riverdata = {
 }
 riverlist = []
 
+#BUT I WILL CERTAINLY BE FIXING THIS! The old solution litteraly made the code run so long... so i think i should seperate the two for loops.
 def createrivers(coords,IMAGE):
     img = Image.open(IMAGE)
     draw = ImageDraw.Draw(img)
@@ -87,20 +95,20 @@ def createrivers(coords,IMAGE):
                 print(point)
                 riverlist.append([point])
                 print(f"point:{point}")
+            for item in range(len(riverlist)):
                 addtooriverlist = []
-                for item in range(6):
-                    print()
-                    print("...")
+                for i in range(5):
+                   print("second part started....")
 
-                    newitem = ((riverlist[itempoint][-1][0] + random.randint(30,40),riverlist[itempoint][-1][1] + random.randint(30,40)+ 4))
-                    print(newitem)
-                    if newitem[0]  < width - 1  and  newitem[1] < height - 1:
-                        if is_on_land(img, newitem[0], newitem[1]) == True:
-                            addtooriverlist.append(tuple(newitem))
-                if addtooriverlist:  # only add if non-empty
+                   newitem = ((riverlist[itempoint][-1][0] + random.randint(30,40),riverlist[itempoint][-1][1] + random.randint(30,40)+ 4))
+                   print(newitem)
+                   if newitem[0]  < width - 1  and  newitem[1] < height - 1:
+                    if is_on_land(img, newitem[0], newitem[1]) == True:
+                      addtooriverlist.append(tuple(newitem))
+                   if addtooriverlist:  # only add if non-empty
                     riverlist[itempoint].extend(addtooriverlist)
-                    print(f"river lisyt{riverlist}")
-                
+                    print(f"river list{riverlist}")
+
             for i in riverlist:
                 i = [tuple(pt) for pt in i]
                 print(f"testing: {i}")
@@ -181,15 +189,33 @@ def preciptationgen(centre,coords,riverlist):
     if divisorriver[0] > roundedcentre and divisorriver[0] < divisorriver[0] + 30:
         part2preciptation = (divisorriver[0] - roundedcentre) / 5
     else:
-        part2preciptation = 10
+        part2preciptation = 20
         print(part1preciptation + part2preciptation)
+        totalprecp = (part1preciptation + part2preciptation)
         preciptitation = ((( (part1preciptation + part2preciptation) / 2) / 3 * 2) + 10, ((part1preciptation + part2preciptation) / 2) / 3 + 10)
     print(f"inches of rainfall each year: {preciptitation}")
 
 
+veglist = []
+def calctreesveg(precipation):
+    treelevel = precipation*3
 
-createrivers(coords, r"finalmountains.png")
-preciptationgen((123,123),coords,riverlist)
+    for category in tree.getroot():
+       print(f"{category.tag.capitalize()}:")
+    # Loop through all items inside each category
+       for plant in category:
+           print(f"  {plant.tag}: {plant.text}")
+           if int(plant.text) >= treelevel:
+               veglist.append(plant.tag)
+               print(f"added {plant.tag} to veglist") 
+    print(f"veggies: {veglist}")
+
+# Define totalprecp with a default value to avoid NameError
+totalprecp = 20  # You can adjust this value as needed
+
+calctreesveg(totalprecp)
+# createrivers(coords, r"finalmountains.png")
+# preciptationgen((123,123),coords,riverlist)
 
 # createwind(r"my_blob.png")
 
