@@ -4,9 +4,13 @@
 import json
 import random
 import PIL
+import Intialscreator
+from Intialscreator import is_on_land
 from PIL import Image, ImageDraw, ImageFont
+import xml.etree.ElementTree as ET
 Red= (201, 26, 26)
 Blue= (50, 147, 168)
+tree = ET.parse(r'plants.xml')
 
 with open("output.json", 'r', encoding='utf-8') as f:
     json1 = f.read()  # read file content as a string
