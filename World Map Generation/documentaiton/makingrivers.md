@@ -39,30 +39,27 @@ out coords two times, one with the tag and one without it.
                 print(f"point:{point}")
                 addtooriverlist = []
 ```
-We run this loop three times:(we will later run more code inside this loop) we set the starting point of our river to a random item in ```ValidCoordsRivers```
-and print it. we append this point to a list called Riverlist, and we print it again, we make a new list called addtoriverlist = []
-## appending a value
+We run this loop three times, creating 3 more lists.
 ```
-                for item in range(6):
-                    print()
-                    print("...")
+            for item in range(len(riverlist)):
+                addtooriverlist = []
+                for i in range(5):
+                   print("second part started....")
 
-                    newitem = ((riverlist[itempoint][-1][0] + random.randint(30,40),riverlist[itempoint][-1][1] + random.randint(30,40)+ 4))
-                    print(newitem)
-                    if newitem[0]  < width - 1  and  newitem[1] < height - 1:
-                        if is_on_land(img, newitem[0], newitem[1]) == True:
-                            addtooriverlist.append(tuple(newitem))
-```
-
-continuing the loop from last time, we make a new loop that runs 6 times: we print a check before making a tuple called new item. This new item is the last xitem 
-of the river currently being  drawn + 30-40, as well as the last y integer doing the same exact thing. we printour new point before checking if their within the
-bounds of the image. if so, then we check if their on land, before adding them to our list.
-## drawing and adding
-```
-  if addtooriverlist:  # only add if non-empty
+                   newitem = ((riverlist[item][-1][0] + random.randint(30,40),riverlist[item][-1][1] + random.randint(30,40)+ 4))
+                   print(newitem)
+                   if newitem[0]  < width - 1  and  newitem[1] < height - 1:
+                    if is_on_land(img, newitem[0], newitem[1]) == True:
+                      addtooriverlist.append(tuple(newitem))
+                   if addtooriverlist:  # only add if non-empty
                     riverlist[itempoint].extend(addtooriverlist)
-                    print(f"river lisyt{riverlist}")
-                
+                    print(f"river list{riverlist}")
+
+```
+
+ For each item in the length of riverlist, we reset the ADDTOORIVERLIST list. We print our check before before setting our new item to the  list aligning with out current item in range's last items first number plus number in the range of 30,40, and then the our current ranges last items second number, creating a new tuple. if the first item of this tuple is less than the width of this image and the second item of this tuple is less than the height, we check if its on land. If so, we append our new item tuple to ADDTOORIVERLIST. if addtoriverlist isnt empty, we add addtooriverlist to riverlist, adn then print this out.
+ ## drawing and adding
+```
             for i in riverlist:
                 i = [tuple(pt) for pt in i]
                 print(f"testing: {i}")
@@ -82,5 +79,5 @@ bounds of the image. if so, then we check if their on land, before adding them t
 
 ```
 
-if add to riverlist exists, then we extend it with our new river. we print our final river before  converting and 
+ we print our final river before  converting and 
 drawing each point. we then print our data a gain and save our pictuere, as well as draw it.
