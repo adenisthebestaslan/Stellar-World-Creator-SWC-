@@ -11,7 +11,7 @@ Red= (201, 26, 26)
 Blue= (50, 147, 168)
 
 #opens up our tree
-tree = ET.parse(r'plants.xml')
+tree = ET.parse(r'C:\Users\adena\OneDrive\Desktop\Stellar World Creator\World Map Generation\plants.xml')
 
 with open("output.json", 'r', encoding='utf-8') as f:
     json1 = f.read()  # read file content as a string
@@ -104,8 +104,8 @@ def createrivers(coords,IMAGE):
                    #again, you might be wondering why im putting a for loop in a for loop again. Remember, this is about SPEED, not readability.
                    # we are litteraly running one line of code in the first one, so it should be fine.
                    print("second part started....")
-
-                   newitem = ((riverlist[itempoint][-1][0] + random.randint(30,40),riverlist[itempoint][-1][1] + random.randint(30,40)+ 4))
+                   print(riverlist[item][-1][0])
+                   newitem = ((riverlist[item][-1][0] + random.randint(30,40),riverlist[item][-1][1] + random.randint(30,40)+ 4))
                    print(newitem)
                    if newitem[0]  < width - 1  and  newitem[1] < height - 1:
                     if is_on_land(img, newitem[0], newitem[1]) == True:
@@ -116,7 +116,7 @@ def createrivers(coords,IMAGE):
 
             for i in riverlist:
                 i = [tuple(pt) for pt in i]
-                print(f"testing: {i}")
+                # print(f"testing: {i}")
                 draw.line(i, fill=Blue, width=3)
     
             # old code from last time:
@@ -176,6 +176,7 @@ def climategen(windmappoints, windpoint, riverdata=".", coords="."):
     climatetempratures = []
     climatetempratures.append(list(windpoint[1][2][0]))
     climatetempratures.append(list(lastpoint[2][0]))
+    print(climatetempratures    )
     #we append both, to the climate tempratures before geting the final temprature which is going to be our two climate temps added
     climatetempfinal = (climatetempratures[0][0] + climatetempratures[1][0]/2,climatetempratures[0][1] + climatetempratures[1][1] /2)
     print(climatetempratures)
@@ -204,7 +205,9 @@ def preciptationgen(centre,coords,riverlist):
         print(f"RIVER {i}")
         finalx = sum(pt[0] for pt in i) / len(i)
         finaly = sum(pt[1] for pt in i) / len(i)
+        print("dizisor river")
     divisorriver = (finalx,finaly)
+    print(divisorriver)
     if divisorriver[0] > roundedcentre and divisorriver[0] < divisorriver[0] + 30:
         #checks if its greater than the centre, but not too far away
         # if so, we use the river to decide how much rain we get
@@ -214,9 +217,9 @@ def preciptationgen(centre,coords,riverlist):
         part2preciptation = 20
         #if we arent nearby any rivers, we just give 20 inches.
         print(f"total precipitation {part1preciptation + part2preciptation}")
-        totalprecp = (part1preciptation + part2preciptation)
+    totalprecp = (part1preciptation + part2preciptation)
         #we add these two together 
-        preciptitation = ((( (part1preciptation + part2preciptation) / 2) / 3 * 2) + 10, ((part1preciptation + part2preciptation) / 2) / 3 + 15.5)
+    preciptitation = ((( (part1preciptation + part2preciptation) / 2) / 3 * 2) + 10, ((part1preciptation + part2preciptation) / 2) / 3 + 15.5)
         # we then take half of this divided by 3, multipled by 2, and add 10. 
         #For the second value, we add the two values together and repeat the last process, but without the multipling by 2., and adding 10.
     print(f"inches of rainfall each year: {preciptitation}")
@@ -238,8 +241,9 @@ def calctreesveg(precipation):
 
 createwind(r"my_blob.png")
 
-# createrivers(coords, r"finalmountains.png")
-# preciptationgen((45,12),coords,riverlist)
+print(coords)
+createrivers(coords, r"finalmountains.png")
+preciptationgen((45,12),coords,riverlist)
 
 # # createwind(r"my_blob.png")
 
@@ -250,5 +254,7 @@ print(f"windpoint {windpoint}")
 climategen(windmappoints, windpoint, riverdata, coords)
 
 # totalprecp = 35.5  # You can adjust this value as needed
+
+# calctreesveg(totalprecp)
 
 # calctreesveg(totalprecp)
