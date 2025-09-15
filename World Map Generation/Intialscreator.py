@@ -5,7 +5,7 @@ import copy
 import json
 Directions = ["north", "south", "east", "west"]
 Blue= (50, 147, 168)
-Black = (0, 0, 0,255)
+Tan = (227, 168, 5)
 Red= (201, 26, 26)
 Grey = (146,150,147)
 LightGrey = (185, 189, 186)
@@ -18,12 +18,11 @@ def Generate(colour=Blue):
   img.save("original.png")
 
 def is_on_land(img, x, y):
-  pixel = img.getpixel((int(x), int(y)))
   try:
-    if  pixel[:3] == Black[:3]:
+    pixel = img.getpixel((int(x), int(y)))
+    if pixel[:3] == Tan[:3]:
         print(f"Checked ({x}, {y}) = {pixel}")
-        return pixel[:3] == (0, 0, 0)
-# Land is black
+        return True  # Land is TAN
     else:
       return False  
   except IndexError:
@@ -35,7 +34,7 @@ def is_on_land(img, x, y):
 #i had to learn about radius for this!
 #basically, the radius is the distance from the center to the edge of the blob.
 def generateBlob(radius=100, center=(100, 100),points=random.randint(5, 15)):
-  image = Image.new('RGBA', (200, 200), 'white')
+  image = Image.new('RGB', (200, 200), 'white')
   draw = ImageDraw.Draw(image)
 
   center = (100, 100)
@@ -60,7 +59,7 @@ def generateBlob(radius=100, center=(100, 100),points=random.randint(5, 15)):
     
     #converts to x y coords
     print(f"Point {i}: {r} ({x}, {y})")
-  draw.polygon(pointslist, fill='Black')
+  draw.polygon(pointslist, fill=Tan)
   image.save("my_blob.png")
   #saves the blob as a png
   print(pointslist)
@@ -68,10 +67,10 @@ def generateBlob(radius=100, center=(100, 100),points=random.randint(5, 15)):
 
 
 coords = {
-    "north": [],
-    "south": [],
-    "east": [],
-    "west": []
+    "north": [(100,100)],
+    "south": [(100,100)],
+    "east": [(100,100)],
+    "west": [(100,100)]
     }
 
 
@@ -172,15 +171,15 @@ def MountainGeneration(IMAGE,coords):
         
 
 print(coords)      
-def savedata(coords):
+def savedata(coords,name):
       print("...................")
-      filepath = "output.json"
+      filepath = (f"{name}")
       with open(filepath, "w") as json_file:
         json.dump(coords, json_file)
 
 
 if __name__ == "__main__":
-    # generateBlob(radius=50, center=(100, 100),)
+    generateBlob(radius=50, center=(100, 100),)
     MountainTetonicGeneration("my_blob.png")
-    # savedata(coords)
+    savedata(coords,"output.json")
     MountainGeneration("my_blob.png", coords)
