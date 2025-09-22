@@ -9,7 +9,7 @@ Generate Map:
         make it check for water near a tetonic line: if the line is blue it will make large mountains. near the nearest land border of the blue line check
         red lines create plataeus
         ignore 
-   Create Climate
+     Create Climate
           make Wind map.
              tempreture(c heck)
              direction(check)
@@ -24,4 +24,22 @@ Generate Map:
      scan image for climate zones and then retrive fauna and flora list from the databases.
 
 
-     0.2.2
+
+
+Generate Cultures:
+    Set basic stats
+      determine way of life.
+      choose staple crops
+      create name
+     more: 
+        create clothing details
+        create cuisnine
+        create holidays
+     pantheon:
+         create gods using factors of enviorment
+     shifts in daily practices          
+         simulate migration
+         simulate changes in way of life
+         simulate cultural exchange
+          
+              
