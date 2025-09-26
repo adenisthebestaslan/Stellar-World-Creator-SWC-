@@ -1,185 +1,265 @@
-from PIL import Image,ImageDraw
-import math
-import random
-import copy
 import json
-Directions = ["north", "south", "east", "west"]
-Blue= (50, 147, 168)
-Tan = (227, 168, 5)
+import random
+import PIL
+import Intialscreator
+from Intialscreator import is_on_land, savedata
+from PIL import Image, ImageDraw, ImageFont
+import xml.etree.ElementTree as ET
+# i was bored, so i felt like commenting this code.
+#redefine these colours again, since we dont need to import them.
 Red= (201, 26, 26)
-Grey = (146,150,147)
-LightGrey = (185, 189, 186)
+Blue= (50, 147, 168)
 
+#opens up our tree
+tree = ET.parse(r'C:\Users\adena\OneDrive\Desktop\Stellar World Creator\World Map Generation\plants.xml')
 
-def Generate(colour=Blue):
-  width = 800
-  height = 600
-  img = Image.new('RGB', (width, height), color=Blue)
-  img.save("original.png")
+with open("output.json", 'r', encoding='utf-8') as f:
+    json1 = f.read()  # read file content as a string
+print(json1)
+coords = json.loads(json1)  
+print(coords)
 
-def is_on_land(img, x, y):
-  try:
-    pixel = img.getpixel((int(x), int(y)))
-    if pixel[:3] == Tan[:3]:
-        print(f"Checked ({x}, {y}) = {pixel}")
-        return True  # Land is TAN
-    else:
-      return False  
-  except IndexError:
-    return False  # Coordinates out of image bounds
-    
-    
-# Generate()
-#pi = 3.14, so 2pi/circumfrence= 6.28.
-#i had to learn about radius for this!
-#basically, the radius is the distance from the center to the edge of the blob.
-def generateBlob(radius=100, center=(100, 100),points=random.randint(5, 15)):
-  image = Image.new('RGB', (200, 200), 'white')
-  draw = ImageDraw.Draw(image)
+windmappoints = {"point1" : [],
+                 "inbetween" : [],
+                 "point2": []
+}
 
-  center = (100, 100)
-  radius = 100
-  # the radius of the circle
-  print(f"Points: {points}")
-  #hoe many points will be used to create the blob
-  angles = 2 * math.pi / points
-  print(f"angles: {angles}")
-  #splits the circle into equal parts, a point for each part
-  pointslist = []
-  for i in range(points):
-    angle = i * angles
-    #the angles/parts of the circle is equal to the item x the angle\
-    irregularity = random.uniform(0.5, 1)
-    #irregularity is here to change the radius of the angle slightly
-    r = radius * (1 + random.uniform(-irregularity, irregularity))
-    #changes some of the radius to make the blob irregluar
-    x = center[0] + r * math.cos(angle)
-    y = center[1] + r * math.sin(angle)
-    pointslist.append((x, y))
-    
-    #converts to x y coords
-    print(f"Point {i}: {r} ({x}, {y})")
-  draw.polygon(pointslist, fill=Tan)
-  image.save("my_blob.png")
-  #saves the blob as a png
-  print(pointslist)
-
-
-
-coords = {
-    "north": [(100,100)],
-    "south": [(100,100)],
-    "east": [(100,100)],
-    "west": [(100,100)]
-    }
-
-
-def MountainTetonicGeneration(IMAGE):
-      img = Image.open(IMAGE)
-      width, height = img.size
-      cx = width // 2
-      cy = height // 2
-
-      centercords = (cx, cy)
-      coords['north'].append((cx, cy))
-      coords['south'].append((cx, cy))
-      coords['east'].append((cx, cy))
-      coords['west'].append((cx, cy))
-      
-      print(f"Center cords: {centercords}")
-      global Directions
-      Plateusisthere = random.randint(0, 1)
-      directionchecks = {
-      "north": {"x": (cx, cx + 30), "y": (cy, height - 1)},
-      "south": {"x": (cx, cx + 30), "y": (0, cy // 2)},
-      "east":  {"x": (0, cx), "y": (0, cy // 2)},
-      "west":  {"x": (cx, width - 1), "y": (cy, cy + 30)}
-      }
-      for direction in Directions:
-
-        for _ in range(3):
-            xr = directionchecks[direction]["x"]
-            yr = directionchecks[direction]["y"]
-            current = (random.randint(*xr), random.randint(*yr))
-            if current not in coords[direction] and is_on_land(img, current[0], current[1]):
-              coords[direction].append(current)
-            print(f"Added {current} to {direction}")
-
-            
-               
-      makeline(coords["north"], img, "yes")
-      makeline(coords["south"], img, "yes")
-      makeline(coords["east"], img, "yes")
-      makeline(coords["west"], img, "yes")
-
-      print(f"Northern coords: {coords['north']}")
-      print(f"Southern coords: {coords['south']}")
-      print(f"Eastern coords: {coords['east']}")
-      print(f"Western coords: {coords['west']}")
-      img.save('output_with_line.png')
-      img.show()
-
-
-      # print(f"Northern cords: {northerncords} southern cords: {southerncords} eastern cords: {easterncords} western cords: {westerncords}")
-
-                 
-            
-      
-      
-         
-def makeline(values, img, colourroll="yes"):
-    draw = ImageDraw.Draw(img)
-    if colourroll == "yes":
-        Plateusisthere = random.randint(0, 1)
-    else:
-        Plateusisthere = 0
-    if Plateusisthere == 1:
-        colour = Red
-    else:
-        colour = Blue
-
-    draw.line(values, fill=colour, width=5)
-    if Plateusisthere == 1:
-      values.append(("Plateu", "true"))
-    else:
-      values.append(("mountain", "true"))
-
-       
-
-       
-
-def MountainGeneration(IMAGE,coords):
+directions = ["east", "west", "north", "south"]
+def createwind(IMAGE):
+    global windmappoints
+    windmappoints = {"point1": [], "inbetween": [], "point2": []}
     img = Image.open(IMAGE)
     draw = ImageDraw.Draw(img)
-    print("Generating mountains...")
-    coordsforgen = copy.deepcopy(coords)
-    for i in coordsforgen:
-        print(coordsforgen[i])
-        # checkcoordsforwater(coords[i],img)
-        if ("Plateu","true") in coordsforgen[i]:
-          coordsforgen[i].remove(("Plateu","true"))
-          coordstodraw = coordsforgen[i]
-          print(coordstodraw)
-          draw.line(coordstodraw, fill=Grey, width=3)
-        elif ("mountain","true") in coordsforgen[i]:
-           coordsforgen[i].remove(("mountain","true"))
-           coordstodraw = coordsforgen[i]
-           print(coordstodraw)
-           draw.line(coordstodraw, fill=LightGrey, width=3)
-    img.save('finalmountains.png')
+    width, height = img.size
+    cx = width // 2
+    cy = height // 2
+    
+    windmappoints["point1"].append(random.randint(1,cy))
+    windmappoints["point1"].append(random.choice(directions))
+    winter1 = (w := random.randint(1, 8), random.randint(w, 17))
+
+    print(f"winter:{winter1}")
+    windmappoints["point1"].append(((winter1),((winter1[0] * 9/5) + 32),((winter1[1] * 9/5) + 32))) # (1, 2)
+    
+    print(windmappoints)
+
+    #I usally do RUP: repeat until painfull. We only do this 3 times, so its fine I guess. But for a longer one, like that check for the mountain range coords, I decided that i shouldnt be doing
+    #that in these cases.
+    
+    winter2 = (w := random.randint(35, 46), random.randint(w, 60))
+    windmappoints["point2"].append(random.randint(windmappoints["point1"][0]+15,height - 1))
+    windmappoints["point2"].append(random.choice(directions))
+    windmappoints["point2"].append(((winter2),((winter2[0] * 9/5) + 32),((winter2[1] * 9/5) + 32))) # (1, 2)
+    
+    winter3 = (w := random.randint(17, 30), random.randint(w, 35))
+    windmappoints["inbetween"].append((windmappoints["point2"][0]-windmappoints["point1"][0]))
+    windmappoints["inbetween"].append(random.choice(directions))
+    windmappoints["inbetween"].append(((winter3),((winter3[0] * 9/5) + 32),((winter3[1] * 9/5) + 32))) # (1, 2)
+
+
+    print(windmappoints)
+
+    linecoords = [((1,windmappoints["point1"][0]),(width - 1,windmappoints["point1"][0])),((1,windmappoints["point2"][0]),(width - 1,windmappoints["point2"][0])),]
+    print(linecoords)
+    draw.line(linecoords[0], fill=Red, width=3)
+    draw.line(linecoords[1], fill=Red, width=3)
+    font = ImageFont.load_default()
+    draw.text((0, windmappoints["point1"][0]), str(windmappoints["point1"]), fill=Blue, font=font)
+    draw.text((0, (windmappoints["point1"][0] + windmappoints["inbetween"][0] // 2)), str(windmappoints["inbetween"]), fill=Blue, font=font)
+    draw.text((0, windmappoints["point2"][0]), str(windmappoints["point2"]), fill=Blue, font=font)
+    Intialscreator.savedata(windmappoints,"windmap.json")
+
+
+    img.save('windmap.png')
     img.show()
-        
+    #(::( Jerry recently picked up a job gaurding this show function. Its his first Summer Job! Wish Him Luck
 
-print(coords)      
-def savedata(coords,name):
-      print("...................")
-      filepath = (f"{name}")
-      with open(filepath, "w") as json_file:
-        json.dump(coords, json_file)
+riverdata = {
+}
+riverlist = []
+
+#BUT I WILL CERTAINLY BE FIXING THIS! The old solution litteraly made the code run so long... so i think i should seperate the two for loops.
+def createrivers(coords,IMAGE):
+    img = Image.open(IMAGE)
+    draw = ImageDraw.Draw(img)
+    width, height = img.size
+
+    for i in coords.items():
+        riverlist = []
+        print(i)
+        if ["mountain", "true"] in i[1]:
+            print("approoved")
+            
+            ValidCoordsRivers= i[1].copy()
+            ValidCoordsRivers.pop()
+            print(f"...l...{ValidCoordsRivers}")
+            print(i[1])
+            for itempoint in range(3):
+                point = random.choice(ValidCoordsRivers)
+                print(point)
+                riverlist.append([point])
+                print(f"point:{point}")
+            for item in range(len(riverlist)):
+                addtooriverlist = []
+                for i in range(5):
+                   #again, you might be wondering why im putting a for loop in a for loop again. Remember, this is about SPEED, not readability.
+                   # we are litteraly running one line of code in the first one, so it should be fine.
+                   print("second part started....")
+                   print(riverlist[item][-1][0])
+                   newitem = ((riverlist[item][-1][0] + random.randint(30,40),riverlist[item][-1][1] + random.randint(30,40)+ 4))
+                   print(newitem)
+                   if newitem[0]  < width - 1  and  newitem[1] < height - 1:
+                    if is_on_land(img, newitem[0], newitem[1]) == True:
+                      addtooriverlist.append(tuple(newitem))
+                   if addtooriverlist:  # only add if non-empty
+                    riverlist[itempoint].extend(addtooriverlist)
+                    print(f"river list{riverlist}")
+            convertedcoords = []
+            for i in riverlist:
+                print(f".......{i}")
+                newi = [tuple(pt) for pt in i]
+                print(f"testing: {newi}")
+                draw.line(newi, fill=Blue, width=3)
+    
+            # old code from last time:
+            # riverlist = [tuple(pt) for pt in riverlist]
+            #  #checks if each item in riverlist is a tuple
+            # draw.line(riverlist, fill=Blue, width=3)
+            # riverdata[i[0]] = riverlist
 
 
-if __name__ == "__main__":
-    generateBlob(radius=50, center=(100, 100),)
-    MountainTetonicGeneration("my_blob.png")
-    savedata(coords,"output.json")
-    MountainGeneration("my_blob.png", coords)
+    img.save('rivers.png')
+    img.show()
+
+    print(f"riverlist:")
+    Intialscreator.savedata(riverlist, "riverdata.json")
+
+
+
+def climategen(windmappoints, windpoint, riverdata=".", coords="."):
+    print(".")
+    print(f"windmap points {windmappoints}")
+    print(f"windpoint : {windpoint}")
+    # now it says what these values are: FINALY!
+    windirection = windpoint[1][1]
+    #sets up our wind direction as the second value
+    print(f"windirection: {windirection}")
+    print(f"{windpoint[0]}")
+    keys = list(windmappoints.keys())
+    #get the keys of WINDMAPPOINTS
+    print(keys)
+    print(windpoint[0])
+    if windpoint[0] == "point2":
+        #if windpoint is point2, we want to go backwards, since i dont want to have it calculate wind direction based on a windzone 2 zone's away.
+        currentindex = 2
+        #our current index is 2, since point2 is the 2nd index but 3rd item. I WILL NEVER, EVER UNDERSTAND WHY MOST PROGRAMMING LANGUAGES START AT 0. If someone is reading this, 
+        #which i doubt, PLEASE explain this. I understand it, but it makes no sense why its like that.
+        # i know that the 1rst item in a list 0, and the 2nd is 1, but WHY?
+        final = True
+        #let it know that we are on the final item,
+        print(currentindex - 1)
+        #print out cirrent item - 1.
+        lastpoint = windmappoints[keys[currentindex - 1]]
+        #our last point wil be the item before the current index. it should technacily be first point outside of this, but im too lazy to care :| 
+        print(lastpoint)
+        print(f"last {lastpoint}")
+
+    else:
+        currentindex = keys.index(windpoint[0])
+        #if its not point two, we can just get the index of the current item and set last point to one, as well as final to false.
+        lastpoint = windmappoints[keys[currentindex + 1]]
+        final = False
+    
+    if windpoint[1][1] != lastpoint[1]:
+        climatewinddirection = (f"{windpoint[1][1]}{lastpoint[1]}")
+        # if windpoints second items second item is not the same as lasts points second item , we set them togter the reasono that  there's two [1]s is because its removed our key, thus getting straight into out list
+    else:
+        climatewinddirection = ({windpoint[1][1]})
+        #if their the same, we just set it to one of them
+    print(climatewinddirection)
+    climatetempratures = []
+    climatetempratures.append(list(windpoint[1][2][0]))
+    climatetempratures.append(list(lastpoint[2][0]))
+    print(climatetempratures    )
+    #we append both, to the climate tempratures before geting the final temprature which is going to be our two climate temps added
+    climatetempfinal = (climatetempratures[0][0] + climatetempratures[1][0]/2,climatetempratures[0][1] + climatetempratures[1][1] /2)
+    return climatetempfinal
+    print(climatetempratures)
+    print(climatetempfinal)
+
+def preciptationgen(centre,coords,riverlist):
+    preciptitation = ()
+    part1preciptation = 0
+    print(".")
+    roundedcentre = (centre[0] // 100) * 100
+    print(roundedcentre)
+    for i in coords.items():
+        print(i[1][1][0])
+        if i[1][1][0] > roundedcentre and i[1][1][0] < (roundedcentre + roundedcentre / 2):
+            #takes our rounded centre and adds it by a 10th of half the elevation. 
+            part1preciptation = roundedcentre / 10 + (i[1][1][0] - roundedcentre / 2) / 10
+        else:
+            part1preciptation = roundedcentre / 10 + 15.5
+            #if i didnt add this here the climates would probaly be unlivable. Imagine living in a place with 0.01 - 0.2 rainfall. NOT FUN!
+    
+    print(part1preciptation)
+    print(riverlist)
+    finalx = 0
+    finaly = 0
+    for i in  riverlist:
+        print(f"RIVER {i}")
+        finalx = sum(pt[0] for pt in i) / len(i)
+        finaly = sum(pt[1] for pt in i) / len(i)
+        print("dizisor river")
+    divisorriver = (finalx,finaly)
+    print(divisorriver)
+    if divisorriver[0] > roundedcentre and divisorriver[0] < divisorriver[0] + 30:
+        #checks if its greater than the centre, but not too far away
+        # if so, we use the river to decide how much rain we get
+        part2preciptation = (divisorriver[0] - roundedcentre) / 5
+        # we take the distance from the centre and divide it by 5
+    else:
+        part2preciptation = 20
+        #if we arent nearby any rivers, we just give 20 inches.
+        print(f"total precipitation {part1preciptation + part2preciptation}")
+    totalprecp = (part1preciptation + part2preciptation)
+        #we add these two together 
+    preciptitation = ((( (part1preciptation + part2preciptation) / 2) / 3 * 2) + 10, ((part1preciptation + part2preciptation) / 2) / 3 + 15.5)
+        # we then take half of this divided by 3, multipled by 2, and add 10. 
+        #For the second value, we add the two values together and repeat the last process, but without the multipling by 2., and adding 10.
+    print(f"inches of rainfall each year: {preciptitation}")
+    return preciptitation
+
+
+veglist = []
+def calctreesveg(precipation):
+    treelevel = precipation * 3
+    print(f"treelevel: {treelevel}")
+    for category in tree.getroot():
+       print(f"{category.tag.capitalize()}:")
+    # Loop through all items inside each category
+       for plant in category:
+           print(f"  {plant.tag}: {plant.text}")
+           if int(plant.text) <= treelevel:
+               veglist.append(plant.tag)
+               print(f"added {plant.tag} to veglist") 
+    print(f"veggies: {veglist}")
+    return veglist
+
+# createwind(r"my_blob.png")
+
+# print(coords)
+# createrivers(coords, r"finalmountains.png")
+# preciptationgen((45,12),coords,riverlist)
+
+# # createwind(r"my_blob.png")
+
+
+
+# windpoint = ("point2", windmappoints["point2"])
+# print(f"windpoint {windpoint}")
+# climategen(windmappoints, windpoint, riverdata, coords)
+
+# totalprecp = 35.5  # You can adjust this value as needed
+
+# calctreesveg(totalprecp)
