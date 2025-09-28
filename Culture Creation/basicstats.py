@@ -50,7 +50,7 @@ def sedornom(precipitation,rivers,coords,startingpoint,animalsinarea):
          largecities = False
     print(lifestyle, largecities)
 
-    #lets check if they could be good at animal husbandry.
+    #lets check if they're good at animal husbandry.
 
     if largecities == True:
         animalhusbandry = True
