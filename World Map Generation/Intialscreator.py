@@ -39,22 +39,28 @@ def generateBlob(radius=100, center=(100, 100),points=random.randint(5, 15)):
 
   center = (100, 100)
   radius = 100
-  # the radius of the circle
+  # the radius of the circle(aka, the distance from the center to the edge)
   print(f"Points: {points}")
-  #hoe many points will be used to create the blob
+  #how many points will be used to create the blob
   angles = 2 * math.pi / points
+  #the angles of each point. we take the full circle(2pi) and divide it by the number of points
+  #giving us the angle between each point
   print(f"angles: {angles}")
-  #splits the circle into equal parts, a point for each part
   pointslist = []
+  #a list of points that we will draw
   for i in range(points):
+    #for however many points:
     angle = i * angles
-    #the angles/parts of the circle is equal to the item x the angle\
+    #multiply the index by the angle number    
     irregularity = random.uniform(0.5, 1)
+    #give it a bit of irregularity
     #irregularity is here to change the radius of the angle slightly
     r = radius * (1 + random.uniform(-irregularity, irregularity))
-    #changes some of the radius to make the blob irregluar
+    # sets our radius to be a random number between the inverted iregularity and the iregularity + 1.
     x = center[0] + r * math.cos(angle)
+    #take our centers x and add r to get the x coordinate, creating a small change
     y = center[1] + r * math.sin(angle)
+    #conver
     pointslist.append((x, y))
     
     #converts to x y coords
