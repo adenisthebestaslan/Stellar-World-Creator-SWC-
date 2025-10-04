@@ -11,7 +11,7 @@ SWC is a program made for completley simulating fantasy worlds: cultures, states
 
 
 # Current Version:
-the current version  that has been released is 0.2.1. I try to advance the counter by 1 every week, so the next update would be 0.2.2 Heres how to read
+the current version  that has been released is 1.0.1. I try to advance the counter by 1 every week, so the next update would be 0.2.2 Heres how to read
 the number: 
 the first number is the number of full parts have been completed, the second number is how many sections of that part has been completed, and the last number is the number of tasks in the current section that have been completed:
 
