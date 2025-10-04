@@ -1,17 +1,22 @@
 
 import sys
-sys.path.append(r"Stellar World Creator\World Map Generation")
-import Intialscreator 
+import copy
+
+sys.path.append(rStellar World Creator\World Map Generation")
+import Intialscreator
 import xml.etree.ElementTree as ET
 
 cultutrename = input("what do you want to parse?")
-tree = ET.parse(rf'Stellar World Creator\Culture Creation\{cultutrename}.xml')
-path = rf'Stellar World Creator\Culture Creation\{cultutrename}.xml'
+tree = ET.parse(rf'{cultutrename}.xml')
+path = rf'{cultutrename}.xml'
+veglists = r'\plants.xml'
+vegtree = ET.parse(veglists)
+vegpath = copy.deepcopy(veglists)
+
+
 
 def sedornom(precipitation,rivers,coords,startingpoint,animalsinarea):
     #it feels like i have to use 1,000,000,000 arguments for everything!
-
-
     nearbyariver = False
     nearbyamountain = False
 
@@ -73,7 +78,47 @@ def sedornom(precipitation,rivers,coords,startingpoint,animalsinarea):
     tree.write(path)
     #This was so easy. all i had to do was check some precipitation and mountain coords.
 
+def makefoodstats(preciptiation,veg):
+    print(preciptiation)
+    #find cooking methods
+    precipavrage = ((preciptiation[0] + preciptiation[1]) / 2)
+    print(precipavrage)
+    if precipavrage < 15:
+       cookingmethods = ["smoking","baking"]
+    elif 15 <= precipavrage <= 23:  # include 23
+        cookingmethods = ["smoking", "boiling"]
+    else:  # everything above 23
+       cookingmethods = ["stove baking","boiling"]
+    print(cookingmethods)
+    staplecrops = []
+    vegtreelevel = 0
+    for i in veg:
+        vegitem = vegtree.find(f".//{i}")
+        #was unsure about this command at first, worked the way i heard it would.
+        #my only grevience is that it shows the location of it in memory
+        print(vegitem)
+        vegtreelevel = int(vegitem.text)
+        print(vegtreelevel)
+        print(vegtreelevel)
+        if vegtreelevel >= 40 and cookingmethods[0] == "smoking":
+           staplecrops.append(i)
+           print("success")
+        elif vegtreelevel >= 40 and vegtreelevel <= 70 and cookingmethods[1] == "boiling":
+             staplecrops.append(i)
+             print("success")
+        else:
+           print("none")
 
+    print(staplecrops)
+
+
+
+
+
+
+
+    
+    
     
 
 
@@ -81,6 +126,8 @@ def sedornom(precipitation,rivers,coords,startingpoint,animalsinarea):
 
 precipitation = Intialscreator.loadata(r"precpitaion.json")
 rivers = Intialscreator.loadata(r"riverdata.json")
-coords = Intialscreator.loadata(r"Stellar World Creator\output.json")
-     
-sedornom(precipitation,rivers,coords,(86, 38),["cows"])
+coords = Intialscreator.loadata(r"output.json")
+veg = Intialscreator.loadata(r"veg.json")
+print(veg)
+makefoodstats(precipitation,veg)
+# sedornom(precipitation,rivers,coords,(86, 38),["cows"])
