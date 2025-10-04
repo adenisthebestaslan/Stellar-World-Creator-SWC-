@@ -29,11 +29,10 @@ Generate Map:
 Generate Cultures:
     Set basic stats
       determine way of life.
-      choose staple crops
+      choose staple crops and cusine
       create name
      more: 
         create clothing details
-        create cuisnine
         create holidays
      pantheon:
          create gods using factors of enviorment
@@ -43,3 +42,4 @@ Generate Cultures:
          simulate cultural exchange
           
               
+
