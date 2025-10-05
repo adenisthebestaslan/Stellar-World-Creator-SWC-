@@ -78,6 +78,7 @@ def sedornom(precipitation,rivers,coords,startingpoint,animalsinarea):
     tree.write(path)
     #This was so easy. all i had to do was check some precipitation and mountain coords.
 
+
 def makefoodstats(preciptiation,veg):
     print(preciptiation)
     #find cooking methods
@@ -95,10 +96,10 @@ def makefoodstats(preciptiation,veg):
     for i in veg:
         vegitem = vegtree.find(f".//{i}")
         #was unsure about this command at first, worked the way i heard it would.
-        #my only grevience is that it shows the location of it in memory
-        print(vegitem)
+        #my only grevience at first was that it showed the location of it in memory,
+        #but i managed to get around that by only printing the
+        print(vegitem.tag)
         vegtreelevel = int(vegitem.text)
-        print(vegtreelevel)
         print(vegtreelevel)
         if vegtreelevel >= 40 and cookingmethods[0] == "smoking":
            staplecrops.append(i)
@@ -110,16 +111,6 @@ def makefoodstats(preciptiation,veg):
            print("none")
 
     print(staplecrops)
-
-
-
-
-
-
-
-    
-    
-    
 
 
     
