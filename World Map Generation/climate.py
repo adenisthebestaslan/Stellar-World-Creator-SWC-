@@ -72,7 +72,9 @@ def createwind(IMAGE):
 
     img.save('windmap.png')
     img.show()
-    #(::( Jerry recently picked up a job gaurding this show function. Its his first Summer Job! Wish Him Luck
+    #)::) Jerry recently picked up a job gaurding this show function. Its his first Summer Job! Wish Him Luck!!!
+    #Update! Jerry has been doing really well at this! he just recived a raise!
+   
 
 riverdata = {
 }
