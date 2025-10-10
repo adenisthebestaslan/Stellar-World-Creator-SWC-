@@ -1,15 +1,18 @@
-
 import sys
 import copy
-
-sys.path.append(rStellar World Creator\World Map Generation")
+sys.path.append(r"Stellar\World Map Generation")
 import Intialscreator
 import xml.etree.ElementTree as ET
-
+import climatecoords
+import random
 cultutrename = input("what do you want to parse?")
-tree = ET.parse(rf'{cultutrename}.xml')
-path = rf'{cultutrename}.xml'
-veglists = r'\plants.xml'
+tree = ET.parse(rf'Stellar\culture\{cultutrename}lifestyle.xml')
+path = rf'Stellar\culture\{cultutrename}lifestyle.xml'
+#i realized that instead of keeping everything in one file,
+#i would just keep 3 files per culture. This is because im lazy and i dont want to have
+#to convert lists to xml, so ill just keep lists as json files since i can easily do that.
+
+veglists = r'plants.xml'
 vegtree = ET.parse(veglists)
 vegpath = copy.deepcopy(veglists)
 
@@ -109,16 +112,42 @@ def makefoodstats(preciptiation,veg):
              print("success")
         else:
            print("none")
-
+    
     print(staplecrops)
+    datatosave = [staplecrops,cookingmethods]
+    Intialscreator.savedata(datatosave,r"foodstats.json")
 
 
     
 
-precipitation = Intialscreator.loadata(r"precpitaion.json")
-rivers = Intialscreator.loadata(r"riverdata.json")
-coords = Intialscreator.loadata(r"output.json")
-veg = Intialscreator.loadata(r"veg.json")
+precipitation = climatecoords.load_json(r"precpitaion.json")
+rivers = climatecoords.load_json(r"riverdata.json")
+coords = climatecoords.load_json(r"output.json")
+veg = climatecoords.load_json(r"veg.json")
+#i forgot to test this so i thought there was a function in intialscreator called
+#load data, but there wasnt. So i used the load json onw in clmiate coords 
 print(veg)
 makefoodstats(precipitation,veg)
-# sedornom(precipitation,rivers,coords,(86, 38),["cows"])
+sedornom(precipitation,rivers,coords,(100, 66),["cows"])
+
+
+def namegen():
+    constanats = ['p','t','k','b','d','f','g','zj','th']
+    vowels = ['a','e','i','o','u','ae']
+    constantstructures = ['cv','cvc','vc']
+    structure = random.choice(constantstructures)
+    #we will set up three things, our counstanats, our vowels, and our structures.
+    #we'll then set up a length for how many of these structures are in the word:
+    wordlength = random.randint(1,3)
+    word = []
+    for i in range(wordlength):
+        for i in structure:
+            print(i)
+            if i == 'c':
+                word.append(random.choice(constanats))
+            elif i == 'v':
+                word.append(random.choice(vowels))
+    word = ''.join(word)
+    print(word)
+
+namegen()
