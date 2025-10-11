@@ -118,9 +118,10 @@ if our preciptiation's x is greater than 20, and it's less than hundred, and we 
     #writing it all
     tree.write(path)
     #This was so easy. all i had to do was check some precipitation and mountain coords.
-    ```
-    we then try to find the root tag, which is the lifestyle tag, and we try to find the pastorialists tag and set pastorialsts to it. we also do the same with cities.
+ ```
+ we then try to find the root tag, which is the lifestyle tag, and we try to find the pastorialists tag and set pastorialsts to it. we also do the same with cities.
     we set our text to the lifestyle, our pastorialsts text to animalhusbandry, and cities text to largecities. we write it all to the tree, and we are finished.
 
     
+
 
