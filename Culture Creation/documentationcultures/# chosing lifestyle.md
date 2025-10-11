@@ -49,7 +49,11 @@ first, we set up a function with these arguments
 | rivers |list | list of lists for coords of diffrent rivers.|
 | coords| tuple|coords of mountains|
 | animals| list|list of animals|
-.
+
+
+
+
+
 we set both nearbyariver and nearbyamountain to false, for each river point  if it's absolute value  of the point's x - startingpoint x is less than or equal to t  20, we set nearby a river to true, and we stop the loop.
 
 ```
@@ -119,3 +123,4 @@ if our preciptiation's x is greater than 20, and it's less than hundred, and we 
     we set our text to the lifestyle, our pastorialsts text to animalhusbandry, and cities text to largecities. we write it all to the tree, and we are finished.
 
     
+
